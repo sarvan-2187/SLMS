@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library Management System - Documentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-code: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6b6b6b;
+            --border-color: #e0e0e0;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --sidebar-bg: #fafafa;
+            --success: #059669;
+            --warning: #d97706;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-code: #161616;
+            --text-primary: #e5e5e5;
+            --text-secondary: #b4b4b4;
+            --text-muted: #8a8a8a;
+            --border-color: #2a2a2a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --sidebar-bg: #141414;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .logo {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .logo p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.625rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: var(--bg-secondary);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 3rem;
+            max-width: 1200px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.625rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-code);
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .info-box.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .info-box h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .inline-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-code);
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            font-size: 0.875em;
+            color: var(--accent);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--bg-code);
+            padding: 0.875rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+
+        td code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--bg-code);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .badge.primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        ul,
+        ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .author-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .author-section h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Smart Library</h1>
+                <p>Management System</p>
+            </div>
+            <div class="nav-section">
+                <div class="nav-title">Getting Started</div>
+                <a href="#overview" class="nav-item active">Overview</a>
+                <a href="#database" class="nav-item">Database Schema</a>
+                <a href="#installation" class="nav-item">Installation</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-title">Procedures</div>
+                <a href="#admin" class="nav-item">Admin Management</a>
+                <a href="#students" class="nav-item">Student Management</a>
+                <a href="#books" class="nav-item">Book Management</a>
+                <a href="#issue-return" class="nav-item">Issue & Return</a>
+                <a href="#transactions" class="nav-item">Transactions</a>
+                <a href="#reports" class="nav-item">Reports & Analytics</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-title">Examples</div>
+                <a href="#usage" class="nav-item">Usage Examples</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Documentation</h1>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">Dark Mode</span>
+                </button>
+            </div>
+
+            <!-- Overview Section -->
+            <section id="overview" class="section">
+                <h2>Overview</h2>
+                <p>The Smart Library Management System is a comprehensive MySQL-based solution for managing library
+                    operations including student records, book inventory, issue/return processes, and transaction
+                    logging.</p>
+
+                <div class="info-box success">
+                    <h4>Key Features</h4>
+                    <ul>
+                        <li>Complete admin authentication and management</li>
+                        <li>Student and book inventory tracking</li>
+                        <li>Automated fine calculation for overdue books</li>
+                        <li>Comprehensive transaction logging</li>
+                        <li>Analytics and reporting capabilities</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Database Schema Section -->
+            <section id="database" class="section">
+                <h2>Database Schema</h2>
+                <p>The system consists of five main tables that handle all library operations.</p>
+
+                <h3>Tables Overview</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Table Name</th>
+                                <th>Purpose</th>
+                                <th>Key Fields</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>admins</code></td>
+                                <td>Store admin credentials</td>
+                                <td>admin_id, admin_name, password</td>
+                            </tr>
+                            <tr>
+                                <td><code>students</code></td>
+                                <td>Maintain student records</td>
+                                <td>student_id, student_name, course, year</td>
+                            </tr>
+                            <tr>
+                                <td><code>books</code></td>
+                                <td>Track book inventory</td>
+                                <td>book_id, title, author, genre, total_copies, available_copies</td>
+                            </tr>
+                            <tr>
+                                <td><code>issued_books</code></td>
+                                <td>Record book transactions</td>
+                                <td>issue_id, student_id, book_id, issue_date, due_date, return_date, fine</td>
+                            </tr>
+                            <tr>
+                                <td><code>transactions</code></td>
+                                <td>Log all system activities</td>
+                                <td>transaction_id, type, ref_id, date_time</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Entity Relationships</h3>
+                <ul>
+                    <li><strong>issued_books</strong> references <strong>students</strong> via <code>student_id</code>
+                    </li>
+                    <li><strong>issued_books</strong> references <strong>books</strong> via <code>book_id</code></li>
+                    <li><strong>transactions</strong> logs activities across all entities</li>
+                </ul>
+            </section>
+
+            <!-- Installation Section -->
+            <section id="installation" class="section">
+                <h2>Installation</h2>
+
+                <div class="info-box warning">
+                    <h4>Important Note</h4>
+                    <p>Running the installation script will drop the existing <code>SmartLibraryDB</code> database if it
+                        exists. Make sure to backup any important data before proceeding.</p>
+                </div>
+
+                <h3>Steps</h3>
+                <ol>
+                    <li>Ensure MySQL Server is installed and running</li>
+                    <li>Open MySQL command line or your preferred MySQL client</li>
+                    <li>Execute the provided SQL script</li>
+                    <li>Verify installation by checking the created tables and procedures</li>
+                </ol>
+
+                <div class="code-block">
+                    <pre>-- Connect to MySQL
+mysql -u root -p
+
+-- Execute the script
+SOURCE /path/to/smart_library_script.sql;
+
+-- Verify installation
+USE SmartLibraryDB;
+SHOW TABLES;
+SHOW PROCEDURE STATUS WHERE Db = 'SmartLibraryDB';</pre>
+                </div>
+            </section>
+
+            <!-- Admin Procedures Section -->
+            <section id="admin" class="section">
+                <h2>Admin Management Procedures</h2>
+                <p>Procedures for managing administrator accounts and authentication.</p>
+
+                <h3>add_admin</h3>
+                <p>Creates a new admin account and logs the transaction.</p>
+                <div class="code-block">
+                    <pre>CALL add_admin('AdminName', 'password123');</pre>
+                </div>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>p_name</code> (VARCHAR): Admin username</li>
+                    <li><code>p_pass</code> (VARCHAR): Admin password</li>
+                </ul>
+
+                <h3>check_admin_login</h3>
+                <p>Validates admin credentials for authentication.</p>
+                <div class="code-block">
+                    <pre>CALL check_admin_login('AdminName', 'password123');</pre>
+                </div>
+                <p><strong>Returns:</strong> "Login Successful" or "Invalid Credentials"</p>
+
+                <h3>view_admins</h3>
+                <p>Retrieves all admin accounts.</p>
+                <div class="code-block">
+                    <pre>CALL view_admins();</pre>
+                </div>
+
+                <h3>update_admin_pass</h3>
+                <p>Changes an admin's password.</p>
+                <div class="code-block">
+                    <pre>CALL update_admin_pass(1, 'newPassword456');</pre>
+                </div>
+
+                <h3>delete_admin</h3>
+                <p>Removes an admin account.</p>
+                <div class="code-block">
+                    <pre>CALL delete_admin(1);</pre>
+                </div>
+            </section>
+
+            <!-- Student Procedures Section -->
+            <section id="students" class="section">
+                <h2>Student Management Procedures</h2>
+                <p>Complete CRUD operations for student records.</p>
+
+                <h3>add_student</h3>
+                <p>Registers a new student in the system.</p>
+                <div class="code-block">
+                    <pre>CALL add_student('John Doe', 'Computer Science', 2);</pre>
+                </div>
+
+                <h3>view_students</h3>
+                <p>Lists all registered students.</p>
+                <div class="code-block">
+                    <pre>CALL view_students();</pre>
+                </div>
+
+                <h3>search_student</h3>
+                <p>Finds students by name (partial match supported).</p>
+                <div class="code-block">
+                    <pre>CALL search_student('John');</pre>
+                </div>
+
+                <h3>update_student</h3>
+                <p>Modifies student information.</p>
+                <div class="code-block">
+                    <pre>CALL update_student(1, 'John Smith', 'Data Science', 3);</pre>
+                </div>
+
+                <h3>delete_student</h3>
+                <p>Removes a student record.</p>
+                <div class="code-block">
+                    <pre>CALL delete_student(1);</pre>
+                </div>
+
+                <h3>count_students</h3>
+                <p>Returns total number of students.</p>
+                <div class="code-block">
+                    <pre>CALL count_students();</pre>
+                </div>
+            </section>
+
+            <!-- Book Procedures Section -->
+            <section id="books" class="section">
+                <h2>Book Management Procedures</h2>
+                <p>Manage your library's book inventory.</p>
+
+                <h3>add_book</h3>
+                <p>Adds a new book to the library catalog.</p>
+                <div class="code-block">
+                    <pre>CALL add_book('Database Systems', 'Silberschatz', 'Technology', 10);</pre>
+                </div>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>p_title</code>: Book title</li>
+                    <li><code>p_author</code>: Author name</li>
+                    <li><code>p_genre</code>: Book category</li>
+                    <li><code>p_total</code>: Total copies (automatically sets available_copies)</li>
+                </ul>
+
+                <h3>view_books</h3>
+                <p>Displays all books in the library.</p>
+                <div class="code-block">
+                    <pre>CALL view_books();</pre>
+                </div>
+
+                <h3>search_book_by_title</h3>
+                <p>Searches books by title keyword.</p>
+                <div class="code-block">
+                    <pre>CALL search_book_by_title('Database');</pre>
+                </div>
+
+                <h3>search_book_by_author</h3>
+                <p>Searches books by author name.</p>
+                <div class="code-block">
+                    <pre>CALL search_book_by_author('Silberschatz');</pre>
+                </div>
+
+                <h3>available_books</h3>
+                <p>Lists only books currently available for borrowing.</p>
+                <div class="code-block">
+                    <pre>CALL available_books();</pre>
+                </div>
+
+                <h3>update_book</h3>
+                <p>Updates book details (does not change copy counts).</p>
+                <div class="code-block">
+                    <pre>CALL update_book(1, 'Updated Title', 'Updated Author', 'Fiction');</pre>
+                </div>
+
+                <h3>delete_book</h3>
+                <p>Removes a book from the catalog.</p>
+                <div class="code-block">
+                    <pre>CALL delete_book(1);</pre>
+                </div>
+
+                <h3>count_books</h3>
+                <p>Returns total number of unique books.</p>
+                <div class="code-block">
+                    <pre>CALL count_books();</pre>
+                </div>
+            </section>
+
+            <!-- Issue and Return Section -->
+            <section id="issue-return" class="section">
+                <h2>Issue & Return Procedures</h2>
+                <p>Handle book borrowing and return operations with automatic fine calculation.</p>
+
+                <h3>issue_book</h3>
+                <p>Issues a book to a student with a 15-day due date.</p>
+                <div class="code-block">
+                    <pre>CALL issue_book(1, 2);  -- student_id, book_id</pre>
+                </div>
+                <div class="info-box success">
+                    <h4>Automatic Actions</h4>
+                    <ul>
+                        <li>Checks book availability</li>
+                        <li>Decrements available_copies by 1</li>
+                        <li>Sets due date to 15 days from issue</li>
+                        <li>Logs transaction</li>
+                    </ul>
+                </div>
+
+                <h3>return_book</h3>
+                <p>Processes book return and calculates late fees.</p>
+                <div class="code-block">
+                    <pre>CALL return_book(1);  -- issue_id</pre>
+                </div>
+                <p><strong>Fine Calculation:</strong> ₹10 per day overdue</p>
+                <div class="info-box warning">
+                    <h4>Fine Policy</h4>
+                    <p>Books returned after the due date incur a fine of ₹10 per day. The fine is automatically
+                        calculated and stored in the issued_books table.</p>
+                </div>
+
+                <h3>renew_book</h3>
+                <p>Extends the due date by 7 days.</p>
+                <div class="code-block">
+                    <pre>CALL renew_book(1);  -- issue_id</pre>
+                </div>
+
+                <h3>view_issued_books</h3>
+                <p>Shows detailed view of all issued books with student and book information.</p>
+                <div class="code-block">
+                    <pre>CALL view_issued_books();</pre>
+                </div>
+
+                <h3>overdue_books</h3>
+                <p>Lists all unreturned books past their due date.</p>
+                <div class="code-block">
+                    <pre>CALL overdue_books();</pre>
+                </div>
+
+                <h3>total_fines</h3>
+                <p>Calculates total fines collected across all transactions.</p>
+                <div class="code-block">
+                    <pre>CALL total_fines();</pre>
+                </div>
+
+                <h3>student_fines</h3>
+                <p>Shows total fines for a specific student.</p>
+                <div class="code-block">
+                    <pre>CALL student_fines(1);  -- student_id</pre>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="section">
+                <h2>Transaction Management</h2>
+                <p>Monitor and manage system activity logs.</p>
+
+                <h3>view_transactions</h3>
+                <p>Displays all logged transactions in descending order.</p>
+                <div class="code-block">
+                    <pre>CALL view_transactions();</pre>
+                </div>
+
+                <h3>latest_transaction</h3>
+                <p>Retrieves the most recent transaction.</p>
+                <div class="code-block">
+                    <pre>CALL latest_transaction();</pre>
+                </div>
+
+                <h3>count_transactions</h3>
+                <p>Returns total number of logged transactions.</p>
+                <div class="code-block">
+                    <pre>CALL count_transactions();</pre>
+                </div>
+
+                <h3>delete_transactions</h3>
+                <p>Clears all transaction logs (use with caution).</p>
+                <div class="code-block">
+                    <pre>CALL delete_transactions();</pre>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <h2>Reports & Analytics</h2>
+                <p>Generate insights and statistics about library operations.</p>
+
+                <h3>system_summary</h3>
+                <p>Provides a comprehensive overview of the library system.</p>
+                <div class="code-block">
+                    <pre>CALL system_summary();</pre>
+                </div>
+                <p><strong>Returns:</strong></p>
+                <ul>
+                    <li>Total students registered</li>
+                    <li>Total books in catalog</li>
+                    <li>Currently active issues</li>
+                    <li>Total fines collected</li>
+                </ul>
+
+                <h3>top_borrowed_books</h3>
+                <p>Shows the 5 most borrowed books.</p>
+                <div class="code-block">
+                    <pre>CALL top_borrowed_books();</pre>
+                </div>
+
+                <h3>top_students</h3>
+                <p>Lists the 5 students who borrowed the most books.</p>
+                <div class="code-block">
+                    <pre>CALL top_students();</pre>
+                </div>
+
+                <h3>stock_summary</h3>
+                <p>Groups available books by genre.</p>
+                <div class="code-block">
+                    <pre>CALL stock_summary();</pre>
+                </div>
+            </section>
+
+            <!-- Usage Examples Section -->
+            <section id="usage" class="section">
+                <h2>Usage Examples</h2>
+                <p>Complete workflow examples for common library operations.</p>
+
+                <h3>Example 1: Complete Workflow</h3>
+                <div class="code-block">
+                    <pre>-- 1. Add admin
+CALL add_admin('Sarvan', 'admin123');
+
+-- 2. Register student
+CALL add_student('Sahil', 'CSE', 1);
+
+-- 3. Add book to catalog
+CALL add_book('DBMS Concepts', 'Korth', 'Database', 5);
+
+-- 4. Issue book to student
+CALL issue_book(1, 1);
+
+-- 5. Check issued books
+CALL view_issued_books();
+
+-- 6. Return book
+CALL return_book(1);
+
+-- 7. View system summary
+CALL system_summary();</pre>
+                </div>
+
+                <h3>Example 2: Searching and Filtering</h3>
+                <div class="code-block">
+                    <pre>-- Search for students
+CALL search_student('Sahil');
+
+-- Find books by title
+CALL search_book_by_title('DBMS');
+
+-- Check available books only
+CALL available_books();
+
+-- View overdue books
+CALL overdue_books();</pre>
+                </div>
+
+                <h3>Example 3: Generating Reports</h3>
+                <div class="code-block">
+                    <pre>-- Get top borrowed books
+CALL top_borrowed_books();
+
+-- Find most active students
+CALL top_students();
+
+-- Check stock by genre
+CALL stock_summary();
+
+-- Calculate total fines
+CALL total_fines();</pre>
+                </div>
+            </section>
+
+            <!-- Author Section -->
+            <div class="author-section">
+                <h3>Project Author</h3>
+                <p style="color: var(--text-secondary);">NAGARAMPALLI SARVAN KUMAR</p>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem;">Smart Library Management
+                    System</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 1.5rem; border-left: 4px solid var(--accent);">
+                <h4>Get the SQL Script</h4>
+                <p style="margin-bottom: 0.5rem;">Download the complete SQL script from the GitHub repository:</p>
+                <a href="https://github.com/sarvan-2187/SLMS" target="_blank" rel="noopener noreferrer"
+                    style="color: var(--accent); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>→ github.com/sarvan-2187/SLMS</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeIcon(theme);
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+        }
+
+        // Smooth scrolling for navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    const target = document.querySelector(this.getAttribute('href'));
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            // Highlight active section on scroll
+            const sections = document.querySelectorAll('.section');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        </script>
+    </body>
+    
+    </html>
